@@ -97,7 +97,7 @@ export default function FullPlayBar({
           <img
             src={song.coverArt}
             alt={song.title}
-            className="w-full h-full object-cover rounded-lg shadow-xl"
+            className="w-full h-full object-cover rounded-lg"
           />
         </div>
 

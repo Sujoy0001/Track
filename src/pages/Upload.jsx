@@ -170,43 +170,56 @@ export default function Upload() {
         </div>
       )}
 
-    {songs.length > 0 ? (
-        <div className="grid grid-cols-3 gap-4">
-            {songs.map((song) => (
+      {songs.length > 0 ? (
+        <div className="grid grid-cols-2 gap-4">
+          {songs.map((song) => (
             <div
-                key={song.id}
-                className="bg-zinc-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.05] transition transform flex-shrink-0"
+              key={song.id}
+              onClick={() => playSong(song)}
+              className="flex items-center bg-zinc-900 rounded-lg p-2 hover:bg-emerald-800/30 transition group cursor-pointer"
             >
-                <div className="relative group">
+              {/* Cover Image */}
+              <div className="relative flex-shrink-0">
                 <img
-                    src={song.coverArt || defaultCover}
-                    alt={song.title}
-                    className="w-full h-48 object-cover"
+                  src={song.coverArt || defaultCover}
+                  alt={song.title}
+                  className="w-24 h-24 object-cover rounded"
                 />
-                <button
-                    onClick={() => removeSong(song.id)}
-                    className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 p-2 rounded-full opacity-0 group-hover:opacity-100 transition cursor-pointer"
+
+                {/* Play/Pause Button */}
+                <div
+                  className={`absolute inset-0 bg-black/50 flex items-center justify-center transition rounded
+                    ${currentSong?.id === song.id
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100"}
+                  `}
                 >
-                    <FaTrash size={14} />
-                </button>
-                <button
-                    onClick={() => playSong(song)}
-                    className="absolute bottom-3 right-3 bg-emerald-500 hover:bg-emerald-600 p-3 rounded-full opacity-0 group-hover:opacity-100 transition cursor-pointer"
-                >
-                    {currentSong?.id === song.id && isPlaying ? <FaPause /> : <FaPlay />}
-                </button>
+                  {currentSong?.id === song.id && isPlaying ? <FaPause /> : <FaPlay />}
                 </div>
-                <div className="p-4">
+              </div>
+
+              {/* Song Details */}
+              <div className="ml-4 flex-1 items-start overflow-hidden">
                 <h3 className="font-semibold truncate">{song.title}</h3>
                 <p className="text-sm text-gray-400 truncate">{song.artist}</p>
-                <p className="text-xs text-gray-500 mt-1">Uploaded: {song.uploadDate}</p>
-                </div>
+              </div>
+
+              {/* Delete Button (stops click from playing) */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering play on delete click
+                  removeSong(song.id);
+                }}
+                className="ml-4 mt-16 text-red-500 hover:text-red-600 cursor-pointer flex gap-2 justify-center items-center bg-red-800/30 p-2 rounded"
+              >
+                <FaTrash size={16} /> Delete
+              </button>
             </div>
-            ))}
+          ))}
         </div>
-    ) : (
-         <p className="text-gray-400">No songs uploaded yet.</p>
-    )}
+      ) : (
+        <p className="text-gray-400">No songs uploaded yet.</p>
+      )}
 
 
       {/* Player Bars */}
